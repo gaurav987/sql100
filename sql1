@@ -1,0 +1,52 @@
+--  find corresponding user id and page id like by friend but not user itself
+CREATE TABLE friends (
+    user_id INT,
+    friend_id INT
+);
+
+-- Insert data into friends table
+INSERT INTO friends VALUES
+(1, 2),
+(1, 3),
+(1, 4),
+(2, 1),
+(3, 1),
+(3, 4),
+(4, 1),
+(4, 3);
+
+-- Create likes table
+CREATE TABLE likes (
+    user_id INT,
+    page_id CHAR(1)
+);
+
+-- Insert data into likes table
+INSERT INTO likes VALUES
+(1, 'A'),
+(1, 'B'),
+(1, 'C'),
+(2, 'A'),
+(3, 'B'),
+(3, 'C'),
+(4, 'B');
+
+select * from friends;
+select * from likes;
+
+with user_page as(select  distinct f.user_id , l.page_id
+from friends f
+inner join likes l
+on f.user_id = l.user_id)
+
+, friens_page as(select ff.friend_id,ff.user_id,ll.page_id
+from friends ff
+inner join likes ll
+on ff.friend_id = ll.user_id )
+
+select fp.page_id , fp.user_id
+from friens_page fp
+left join user_page up
+on fp.user_id = up.user_id and fp.page_id = up.page_id
+where up.user_id is Null
+order by fp.user_id
