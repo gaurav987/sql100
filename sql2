@@ -1,0 +1,48 @@
+--Script
+-- swaping the orders from order table
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    item VARCHAR(255) NOT NULL
+);
+
+INSERT INTO orders (order_id, item) VALUES
+(1, 'Chow Mein'),
+(2, 'Pizza'),
+(3, 'Veg Nuggets'),
+(4, 'Paneer Butter Masala'),
+(5, 'Spring Rolls'),
+(6, 'Veg Burger'),
+(7, 'Paneer Tikka');
+
+select * from orders
+
+with order_cnt as(select    
+                      count(*)  as total_order
+from orders)
+
+select item,
+      case 
+	      when order_id % 2 != 0 and total_order != order_id
+		      then order_id+1
+		   when order_id % 2 != 0 and total_order = order_id
+		      then order_id
+			else 
+			   order_id -1 
+			   end as corrected_id
+		  
+		      
+from orders
+cross join order_cnt
+order by corrected_id
+
+
+
+
+
+
+
+
+
+
+
